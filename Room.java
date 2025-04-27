@@ -1,4 +1,6 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.io.*;
 
 /**
  * Enum representing different types of rooms.
@@ -14,20 +16,11 @@ enum RoomType {
  * room number, and room type. It also includes a simple console-based room booking system.
  */
 public class Room {
-    /** Indicates if the room is available for booking. */
     private boolean isAvailable = true;
-
-    /** The number assigned to the room. */
-    private int roomNumber;
-
-    /** The price of the room. */
-    private double price;
-
-    /** The type of the room (Single, Double, or VIP). */
-    private RoomType roomType;
-
-    /** Array to hold all room instances. */
     private static Room[] rooms = new Room[120];
+    private int roomNumber;
+    private double price;
+    private RoomType roomType;
 
     /**
      * Constructs a Room object with a room number, price, and type.
@@ -42,37 +35,49 @@ public class Room {
         this.roomType = roomType;
     }
 
-    /**
-     * Starts the interactive booking system for users to book and view rooms.
-     */
+    public static Room[] getRooms() {
+        return rooms;
+    }
+
+    public int getRoomNumber() {
+        return roomNumber;
+    }
+
+    public void setAvailable(boolean available) {
+        this.isAvailable = available;
+    }
+
+
     public static void startBookingSystem() {
         Scanner scanner = new Scanner(System.in);
         initializeRooms();
 
         while (true) {
-            System.out.println("\n--- Room Booking Menu ---");
-            System.out.println("1. Book a Room");
-            System.out.println("2. View All Booked Rooms");
-            System.out.println("3. Exit");
-            System.out.print("Enter your choice (1–3): ");
-            int option;
             try {
-                option = scanner.nextInt();
-            } catch (Exception e) {
-                System.out.println("Invalid input. Please enter a number between 1 and 3.");
-                scanner.nextLine(); // Clear input buffer
-                continue;
-            }
+                System.out.println("\n--- Room Booking Menu ---");
+                System.out.println("1. Book a Room");
+                System.out.println("2. Unbook a Room");
+                System.out.println("3. View All Booked Rooms");
+                System.out.println("4. Exit");
+                System.out.print("Enter your choice (1–4): ");
 
-            if (option == 1) {
-                handleBooking(scanner);
-            } else if (option == 2) {
-                showBookedRooms();
-            } else if (option == 3) {
-                System.out.println("Goodbye!");
-                break;
-            } else {
-                System.out.println("Invalid choice.");
+                int option = scanner.nextInt();
+
+                if (option == 1) {
+                    handleBooking(scanner);
+                } else if (option == 2) {
+                    handleUnbooking(scanner);
+                } else if (option == 3) {
+                    showBookedRooms();
+                } else if (option == 4) {
+                    System.out.println("Goodbye!");
+                    break;
+                } else {
+                    System.out.println("Invalid choice.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+                scanner.nextLine();
             }
         }
     }
@@ -85,6 +90,7 @@ public class Room {
         System.out.println("1. Single Room (1–49)");
         System.out.println("2. Double Room (50–99)");
         System.out.println("3. VIP Room (100–119)");
+
         System.out.print("Enter choice (1–3): ");
         int choice;
         try {
@@ -104,7 +110,6 @@ public class Room {
             return;
         }
 
-        // Show available rooms
         boolean available = false;
         System.out.println("Available " + selectedType + "s:");
         for (Room room : rooms) {
@@ -123,7 +128,7 @@ public class Room {
         int selectedNumber = 0;
         boolean bookingComplete = false;
 
-        // Booking loop
+
         while (!bookingComplete) {
             System.out.print("\nEnter room number to book: ");
             try {
@@ -143,7 +148,30 @@ public class Room {
                     if (room.isAvailable) {
                         room.isAvailable = false;
                         System.out.println("Room " + selectedNumber + " is now booked.");
-                        bookingComplete = true;
+                        System.out.println("Please select payment method:");
+                        System.out.println("1. Credit Card");
+                        System.out.println("2. Cash");
+                        System.out.println("3. Online");
+                        System.out.print("Enter your choice (1–3): ");
+
+                        int paymentOption = scanner.nextInt();
+                        String method = switch (paymentOption) {
+                            case 1 -> "Credit Card";
+                            case 2 -> "Cash";
+                            case 3 -> "Online";
+                            default -> "Unknown";
+                        };
+
+
+                        Payment payment = new Payment(selectedNumber, room.price, method);
+                        if (payment.processPayment()) {
+                            generateReceipt(room.roomNumber, room.roomType, room.price, method);
+                            bookingComplete = true;
+                        } else {
+                            System.out.println("Booking not completed, no receipt generated.");
+                            bookingComplete = true;
+                        }
+
                         break;
                     } else {
                         System.out.println("Room " + selectedNumber + " is already booked.");
@@ -171,6 +199,52 @@ public class Room {
             if (!roomFound) {
                 System.out.println("Invalid room number for selected type. Please try again.");
             }
+        }
+    }
+
+
+    /**
+     * Handles the process of unbooking a room.
+     *
+     * @param scanner the scanner object used for input
+     */
+    private static void handleUnbooking(Scanner scanner) {
+        System.out.println("\n--- All Rooms That Are Booked ---");
+        for (Room room : rooms) {
+            if (room.isAvailable == false) {
+                System.out.println("Room " + room.roomNumber + " (" + room.roomType + ")");
+            }
+
+
+        }
+        System.out.print("\nEnter the room number to unbook: ");
+        int roomNumber;
+        try {
+            roomNumber = scanner.nextInt();
+        } catch (Exception e) {
+            System.out.println("Invalid input. Please enter a valid room number.");
+            scanner.nextLine();
+            return;
+        }
+
+        boolean roomFound = false;
+        for (Room room : rooms) {
+            if (room.roomNumber == roomNumber) {
+                roomFound = true;
+
+                if (!room.isAvailable) {
+                    room.setAvailable(true);
+                    System.out.println("Room " + roomNumber + " has been unbooked successfully.");
+                } else {
+                    System.out.println("Room " + roomNumber + " is already available and cannot be unbooked.");
+                }
+
+                break;
+            }
+        }
+
+        if (!roomFound) {
+            System.out.println("Room number " + roomNumber + " not found.");
         }
     }
 
@@ -205,9 +279,35 @@ public class Room {
             rooms[i] = new Room(roomNum, getPriceForType(type), type);
         }
     }
+    /**
+     * Generates a receipt for the room booking and appends it to a single receipts file.
+     */
+    private static void generateReceipt(int roomNumber, RoomType type, double price, String method) {
+        String filename = "receipts.txt";
+        String content =
+                "-------------------------\n" +
+                        "  HOTEL BOOKING RECEIPT \n" +
+                        "-------------------------\n" +
+                        "Room Number : " + roomNumber + "\n" +
+                        "Room Type   : " + type + "\n" +
+                        "Price       : " + price + " USD\n" +
+                        "Payment     : " + method + "\n" +
+                        "Status      : Confirmed\n" +
+                        "-------------------------\n" +
+                        "Thank you for staying with us!\n\n";
+
+        try (FileWriter fileWriter = new FileWriter(filename, true);
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+            bufferedWriter.write(content);
+            System.out.println("Receipt added to: " + filename);
+        } catch (IOException e) {
+            System.out.println("Error generating receipt: " + e.getMessage());
+        }
+    }
 
     /**
      * Returns the price based on the room type.
+     *
      * @param type the RoomType enum
      * @return the price of the room
      */
@@ -231,6 +331,7 @@ public class Room {
         Room.startBookingSystem();
     }
 }
+
 
 
 
