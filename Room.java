@@ -165,7 +165,7 @@ public class Room {
 
                         Payment payment = new Payment(selectedNumber, room.price, method);
                         if (payment.processPayment()) {
-                            generateReceipt(room.roomNumber, room.roomType, room.price, method);
+                            Receipt.generateReceipt(room.roomNumber, room.roomType, room.price, method);
                             bookingComplete = true;
                         } else {
                             System.out.println("Booking not completed, no receipt generated.");
@@ -279,31 +279,7 @@ public class Room {
             rooms[i] = new Room(roomNum, getPriceForType(type), type);
         }
     }
-    /**
-     * Generates a receipt for the room booking and appends it to a single receipts file.
-     */
-    private static void generateReceipt(int roomNumber, RoomType type, double price, String method) {
-        String filename = "receipts.txt";
-        String content =
-                "-------------------------\n" +
-                        "  HOTEL BOOKING RECEIPT \n" +
-                        "-------------------------\n" +
-                        "Room Number : " + roomNumber + "\n" +
-                        "Room Type   : " + type + "\n" +
-                        "Price       : " + price + " USD\n" +
-                        "Payment     : " + method + "\n" +
-                        "Status      : Confirmed\n" +
-                        "-------------------------\n" +
-                        "Thank you for staying with us!\n\n";
 
-        try (FileWriter fileWriter = new FileWriter(filename, true);
-             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-            bufferedWriter.write(content);
-            System.out.println("Receipt added to: " + filename);
-        } catch (IOException e) {
-            System.out.println("Error generating receipt: " + e.getMessage());
-        }
-    }
 
     /**
      * Returns the price based on the room type.
@@ -331,14 +307,3 @@ public class Room {
         Room.startBookingSystem();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
