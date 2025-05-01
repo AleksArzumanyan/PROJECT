@@ -1,25 +1,23 @@
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Customer {
-    private String guestID;
-    private String name;
-    private String email;
-    private String phoneNumber;
+    protected String guestID;
+    protected String name;
+    protected String surname;
+    protected String email;
+    protected String phoneNumber;
+    protected String passportNumber;
     private static ArrayList<String> existingGuestIDs = new ArrayList<>();
-    private static int counter=1;
+    private static int counter = 1;
 
-    public Customer(String name, String email, String phoneNumber) {
-        if (name.length() < 2) {
-            throw new IllegalArgumentException("Name must have at least 2 characters.");
-        }
-
+    public Customer(String name,String surname, String email, String phoneNumber, String passportNumber) {
         this.guestID = generateUniqueGuestID(name);
         this.name = name;
+        this.surname = surname;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.passportNumber = passportNumber;
     }
-
 
     private String generateUniqueGuestID(String name) {
         String baseID = name.substring(0, 2).toUpperCase();
@@ -36,24 +34,15 @@ public class Customer {
         return newGuestID;
     }
 
-
-
-    private String generateRandomDigits() {
-        Random rand = new Random();
-        String digits = "";
-        for (int i = 0; i < 8; i++) {
-            digits += rand.nextInt(10);
-        }
-        return digits;
-    }
-
-
     public String getGuestID() {
         return guestID;
     }
 
     public String getName() {
         return name;
+    }
+    public String getSurname() {
+        return surname;
     }
 
     public String getEmail() {
@@ -64,9 +53,16 @@ public class Customer {
         return phoneNumber;
     }
 
-    // Setters (if you want the ability to change customer info later)
+    public String getPassportNumber() {
+        return passportNumber;
+    }
+
+
     public void setName(String name) {
         this.name = name;
+    }
+    public void setSurName(String surname) {
+        this.surname = surname;
     }
 
     public void setEmail(String email) {
@@ -78,6 +74,6 @@ public class Customer {
     }
 
     public String toString() {
-        return "GuestID: " + guestID + ", Name: " + name + ", Email: " + email + ", Phone: " + phoneNumber;
+        return "GuestID: " + guestID + ", Name: " + name + ", Surname: " + surname + ", Email: " + email + ", Phone: " + phoneNumber + "Passport: " + passportNumber;
     }
 }
