@@ -6,8 +6,20 @@ import java.util.Scanner;
  * It allows users to confirm their payment method and finalize the booking.
  */
 public class Payment {
+
+    /**
+     * The room number for which the payment is being made.
+     */
     private int roomNumber;
+
+    /**
+     * The amount to be paid for the room booking.
+     */
     private double amount;
+
+    /**
+     * The payment method chosen by the user.
+     */
     private String paymentMethod;
 
     /**
