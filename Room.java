@@ -153,12 +153,26 @@ public class Room {
                     break;
                 }
 
-                System.out.print("Enter your email: ");
-                String email = scanner.nextLine();
+
+                String email;
+                while(true) {
+                    System.out.print("Enter your email: ");
+                    email = scanner.nextLine();
+
+                    if (email.length() <= 5) {
+                        System.out.println("Email must be longer than 5 character.");
+                        continue;
+                    }
+                    if (!email.contains("@")) {
+                        System.out.println("Invalid email address. It must include @.");
+                        continue;
+                    }
+                    break;
+                }
 
                 String phoneNumber;
                 while (true) {
-                    System.out.print("Enter your phone number: ");
+                    System.out.print("Enter your phone number: +");
                     phoneNumber = scanner.nextLine();
                     if (!phoneNumber.matches("\\d{8,15}")) {
                         System.out.println("Invalid phone number. It should be 8 to 15 digits.");
@@ -191,19 +205,38 @@ public class Room {
                             room.isAvailable = false;
                             room.customer = loyalCustomer;
                             System.out.println("Room " + selectedNumber + " is now booked.");
-                            System.out.println("Please select payment method:");
-                            System.out.println("1. Credit Card");
-                            System.out.println("2. Cash");
-                            System.out.println("3. Online");
-                            System.out.print("Enter your choice (1–3): ");
+                            int paymentOption;
 
-                            int paymentOption = scanner.nextInt();
+                            while (true) {
+                                System.out.println("Please select payment method:");
+                                System.out.println("1. Credit Card");
+                                System.out.println("2. Cash");
+                                System.out.println("3. Online");
+                                System.out.print("Enter your choice (1–3): ");
+
+                                try {
+                                    paymentOption = scanner.nextInt();
+                                    scanner.nextLine();
+
+                                    if (paymentOption >= 1 && paymentOption <= 3) {
+                                        break;
+                                    } else {
+                                        System.out.println("Invalid choice. Please select 1, 2, or 3.");
+                                    }
+                                } catch (InputMismatchException e) {
+                                    System.out.println("Invalid input. Please enter a number between 1 and 3.");
+                                    scanner.nextLine();
+                                }
+                            }
+
+
                             String method = switch (paymentOption) {
                                 case 1 -> "Credit Card";
                                 case 2 -> "Cash";
                                 case 3 -> "Online";
-                                default -> "Unknown";
+                                default -> "Unknown"; // will never happen because we validated it above
                             };
+
 
                             Payment payment = new Payment(selectedNumber, room.price, method);
                             if (payment.processPayment()) {
@@ -254,15 +287,19 @@ public class Room {
             }
         }
 
-        System.out.print("\nEnter the room number to unbook (or -1 to go back): ");
         int roomNumber;
-        try {
-            roomNumber = scanner.nextInt();
-        } catch (Exception e) {
-            System.out.println("Invalid input. Please enter a valid room number.");
-            scanner.nextLine();
-            return;
+        while (true) {
+            System.out.print("\nEnter the room number to unbook (or -1 to go back): ");
+            try {
+                roomNumber = scanner.nextInt();
+                scanner.nextLine();
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid room number.");
+                scanner.nextLine();
+            }
         }
+
 
         if (roomNumber == -1) return;
 
