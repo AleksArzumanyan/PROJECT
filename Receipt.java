@@ -10,7 +10,7 @@ public class Receipt {
     /**
      * Generates a receipt for the room booking and appends it to a single receipts file.
      */
-    public static void generateReceipt(int roomNumber, RoomType type, double price, String method) {
+    public static void generateReceipt(int roomNumber, RoomType type, double price, String method,Customer customer) {
         String filename = "receipts.txt";
         DateFormat data= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
@@ -26,6 +26,7 @@ public class Receipt {
                         "Payment     : " + method + "\n" +
                         "Status      : Confirmed\n" +
                         "-------------------------\n" +
+                        "Customer Info : " + customer + "\n" +
                         "Thank you for staying with us!\n\n";
 
         try (FileWriter fileWriter = new FileWriter(filename, true);
@@ -36,4 +37,5 @@ public class Receipt {
             System.out.println("Error generating receipt: " + e.getMessage());
         }
     }
+
 }
