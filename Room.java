@@ -179,9 +179,8 @@ public class Room {
                     break;
                 }
 
-
                 String email;
-                while (true) {
+                while(true) {
                     System.out.print("Enter your email: ");
                     email = scanner.nextLine();
 
@@ -218,16 +217,17 @@ public class Room {
                     break;
                 }
 
-                LoyalCustomer loyalCustomer = null;
+                boolean isReturning = false;
                 for (LoyalCustomer lc : loyalCustomers) {
-                    if (lc.getPhoneNumber().equals(phoneNumber)) {
-                        loyalCustomer = lc;
+                    if (lc.getPassportNumber().equals(passportNumber)) {
+                        isReturning = true;
                         break;
                     }
                 }
 
-                if (loyalCustomer == null) {
-                    loyalCustomer = new LoyalCustomer(name, surname, email, phoneNumber, passportNumber);
+                LoyalCustomer loyalCustomer = new LoyalCustomer(name, surname, email, phoneNumber, passportNumber);
+
+                if (!isReturning) {
                     loyalCustomers.add(loyalCustomer);
                 }
 
@@ -237,30 +237,18 @@ public class Room {
                     if (room.roomNumber == selectedNumber && room.roomType == selectedType) {
                         roomFound = true;
 
-                        // Room booking logic
                         if (room.isAvailable) {
                             room.isAvailable = false;
                             room.customer = loyalCustomer;
                             System.out.println("Room " + selectedNumber + " is now booked.");
 
-                            // Check if the customer has booked before (based on their passport number)
-                            boolean isReturning = false;
-                            for (LoyalCustomer lc : loyalCustomers) {
-                                if (lc.getPassportNumber().equals(passportNumber)) {
-                                    isReturning = true; // They are a returning customer
-                                    break;
-                                }
-                            }
-
-                            // If they are a returning customer, apply a 10% discount
-                            double finalPrice = room.price;
+                            double finalPrice = isReturning ? room.price * 0.9 : room.price;
                             if (isReturning) {
-                                finalPrice *= 0.9;  // Apply a 10% discount for returning customers
                                 System.out.println("Returning customer detected. 10% discount applied.");
                             }
 
-                            // Process payment
                             int paymentOption;
+
                             while (true) {
                                 System.out.println("Please select payment method:");
                                 System.out.println("1. Credit Card");
@@ -290,26 +278,17 @@ public class Room {
                                 default -> "Unknown";
                             };
 
-                            // Process payment
                             Payment payment = new Payment(selectedNumber, finalPrice, method);
                             if (payment.processPayment()) {
-                                // Generate receipt without the loyalty points part
                                 Receipt.generateReceipt(room.roomNumber, room.roomType, finalPrice, method, loyalCustomer);
-
-                                // Acknowledge the loyalty status without adding points
-                                System.out.println(loyalCustomer.getName() + " is a loyal customer and will receive a 10% discount next time.");
-
-                                // After a successful booking, add the customer to loyalCustomers if not already there
-                                if (!isReturning) {
-                                    loyalCustomers.add(loyalCustomer);
+                                if (isReturning) {
+                                    System.out.println(loyalCustomer.getName() + " is a loyal customer and received a discount.");
                                 }
-
                                 bookingComplete = true;
                             } else {
                                 System.out.println("Booking not completed, no receipt generated.");
                                 bookingComplete = true;
                             }
-
                         } else {
                             System.out.println("Room " + selectedNumber + " is already booked.");
                             System.out.println("Please choose another available room:");
@@ -329,7 +308,6 @@ public class Room {
                             System.out.println();
                             break;
                         }
-
                     }
                 }
 
@@ -340,6 +318,7 @@ public class Room {
             return;
         }
     }
+
 
     private static void handleUnbooking(Scanner scanner) {
         System.out.println("\n--- All Rooms That Are Booked ---");
