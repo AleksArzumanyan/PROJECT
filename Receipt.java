@@ -26,7 +26,7 @@ public class Receipt {
                         "Payment     : " + method + "\n" +
                         "Status      : Confirmed\n" +
                         "-------------------------\n" +
-                        "Customer Info : " + customer + "\n" +
+                        "Customer Info : " + "\n" + customer + "\n" +
                         "Thank you for staying with us!\n\n";
 
         try (FileWriter fileWriter = new FileWriter(filename, true);
