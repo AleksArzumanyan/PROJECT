@@ -1,6 +1,6 @@
 import java.util.ArrayList
 
-public class Customer {
+public class Customer 
     protected String guestID;
     protected String name;
     protected String surname;
