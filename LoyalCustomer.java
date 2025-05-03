@@ -1,50 +1,23 @@
-
-/**
- * The LoyalCustomer class extends Customer and tracks loyalty points for discount opportunity.
- */
-class LoyalCustomer extends Customer {
-    private int loyaltyPoints;
+public class LoyalCustomer extends Customer {
 
     public LoyalCustomer(String name, String surname, String email, String phoneNumber, String passportNumber) {
         super(name, surname, email, phoneNumber, passportNumber);
-        this.loyaltyPoints = 0;
     }
-
-
-    public void addPoints(int points) {
-        this.loyaltyPoints += points;
-    }
-
-
-    public int getLoyaltyPoints() {
-        return loyaltyPoints;
-    }
-
-
-    public boolean isEligibleForDiscount() {
-        return loyaltyPoints > 0;
-    }
-
 
     public double calculateFinalPrice(double roomPrice) {
-        double finalPrice = roomPrice;
-
-
-        if (isEligibleForDiscount()) {
-            finalPrice *= 0.9;
-        }
-
-        return finalPrice;
+        // Apply a 10% discount for loyal customers
+        return roomPrice * 0.9;
     }
 
-
-
+    @Override
     public boolean equals(Object obj) {
         if (obj == null || getClass() != obj.getClass()) return false;
         LoyalCustomer that = (LoyalCustomer) obj;
         return getPassportNumber().equals(that.getPassportNumber());
     }
+
+    @Override
     public String toString() {
-        return "GuestID: " + guestID + "\n" + "Name: " + name +"\n" + "Surname: " + surname + "\n" +"Email: " + email +"\n" + "Phone: +" + phoneNumber + "\n" + "Passport: " + passportNumber +"\n" + "LoyalityPoints: " + loyaltyPoints + "\n";
+        return "GuestID: " + guestID + ", Name: " + name + ", Surname: " + surname + ", Email: " + email + ", Phone: " + phoneNumber + ", Passport: " + passportNumber;
     }
 }
