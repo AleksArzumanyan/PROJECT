@@ -45,6 +45,6 @@ class LoyalCustomer extends Customer {
         return getPassportNumber().equals(that.getPassportNumber());
     }
     public String toString() {
-        return "GuestID: " + guestID + ", Name: " + name + ", Surname: " + surname + ", Email: " + email + ", Phone: " + phoneNumber + ", Passport: " + passportNumber + ", LoyalityPoints: " + loyaltyPoints;
+        return "GuestID: " + guestID + "\n" + "Name: " + name +"\n" + "Surname: " + surname + "\n" +"Email: " + email +"\n" + "Phone: +" + phoneNumber + "\n" + "Passport: " + passportNumber +"\n" + "LoyalityPoints: " + loyaltyPoints + "\n";
     }
 }
