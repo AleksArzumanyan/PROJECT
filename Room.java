@@ -1,6 +1,7 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.*;
 
 /**
  * Enum representing different types of rooms.
@@ -23,6 +24,8 @@ public class Room {
     private RoomType roomType;
     private Customer customer;
     private static ArrayList<LoyalCustomer> loyalCustomers = new ArrayList<>();
+    private static ArrayList<Feedback> allFeedback = new ArrayList<>();
+
 
     public Room(int roomNumber, double price, RoomType roomType) {
         this.roomNumber = roomNumber;
@@ -56,8 +59,10 @@ public class Room {
                 System.out.println("1. Book a Room");
                 System.out.println("2. Unbook a Room");
                 System.out.println("3. View All Booked Rooms");
-                System.out.println("4. Exit");
-                System.out.print("Enter your choice (1–4): ");
+                System.out.println("4. Leave Feedback");
+                System.out.println("5. Show Hotel Rating Summary");
+                System.out.println("6. Exit");
+                System.out.print("Enter your choice (1–6): ");
 
                 int option = scanner.nextInt();
 
@@ -68,6 +73,10 @@ public class Room {
                 } else if (option == 3) {
                     showBookedRooms();
                 } else if (option == 4) {
+                    leaveFeedback(scanner);
+                } else if (option == 5) {
+                    showRatingSummary();
+                } else if (option == 6) {
                     System.out.println("Goodbye!");
                     break;
                 } else {
@@ -141,7 +150,7 @@ public class Room {
 
                 String name;
                 while (true) {
-                    System.out.print("Enter guest's name: ");
+                    System.out.print("Enter your name: ");
                     name = scanner.nextLine();
 
                     if (name.length() <= 1) {
@@ -154,29 +163,15 @@ public class Room {
                     }
                     break;
                 }
-                String surname;
-                while (true) {
-                    System.out.print("Enter guest's surname: ");
-                    surname = scanner.nextLine();
 
-                    if (surname.length() <= 1) {
-                        System.out.println("Surname must be longer than 1 character.");
-                        continue;
-                    }
-                    if (!surname.matches("[A-Za-z ]+")) {
-                        System.out.println("Invalid surname. Only letters and spaces are allowed.");
-                        continue;
-                    }
-                    break;
-                }
 
                 String email;
-                while (true) {
-                    System.out.print("Enter guest's email: ");
+                while(true) {
+                    System.out.print("Enter your email: ");
                     email = scanner.nextLine();
 
                     if (email.length() <= 5) {
-                        System.out.println("Email must be longer than 5 characters.");
+                        System.out.println("Email must be longer than 5 character.");
                         continue;
                     }
                     if (!email.contains("@")) {
@@ -188,7 +183,7 @@ public class Room {
 
                 String phoneNumber;
                 while (true) {
-                    System.out.print("Enter guest's phone number: +");
+                    System.out.print("Enter your phone number: +");
                     phoneNumber = scanner.nextLine();
                     if (!phoneNumber.matches("\\d{8,15}")) {
                         System.out.println("Invalid phone number. It should be 8 to 15 digits.");
@@ -199,7 +194,7 @@ public class Room {
 
                 String passportNumber;
                 while (true) {
-                    System.out.print("Enter guest's passport number: ");
+                    System.out.print("Enter your passport number: ");
                     passportNumber = scanner.nextLine();
                     if (passportNumber.length() < 5 || !passportNumber.matches("[A-Z0-9]+")) {
                         System.out.println("Invalid passport number. Must be 5+ letters/digits.");
@@ -210,14 +205,14 @@ public class Room {
 
                 LoyalCustomer loyalCustomer = null;
                 for (LoyalCustomer lc : loyalCustomers) {
-                    if (lc.getPassportNumber().equals(passportNumber)) {
+                    if (lc.getPhoneNumber().equals(phoneNumber)) {
                         loyalCustomer = lc;
                         break;
                     }
                 }
 
                 if (loyalCustomer == null) {
-                    loyalCustomer = new LoyalCustomer(name, surname, email, phoneNumber, passportNumber);
+                    loyalCustomer = new LoyalCustomer(name, email, phoneNumber, passportNumber);
                     loyalCustomers.add(loyalCustomer);
                 }
 
@@ -232,9 +227,21 @@ public class Room {
                             room.customer = loyalCustomer;
                             System.out.println("Room " + selectedNumber + " is now booked.");
 
-                            // Use the calculateFinalPrice method from LoyalCustomer
-                            double finalPrice = loyalCustomer.calculateFinalPrice(room.price);
-                            System.out.println("Final price: " + finalPrice);
+                            // Apply 10% discount if this passport is used before
+                            boolean isReturning = false;
+                            for (LoyalCustomer lc : loyalCustomers) {
+                                if (!lc.equals(loyalCustomer) && lc.getPassportNumber().equals(passportNumber)) {
+                                    isReturning = true;
+                                    break;
+                                }
+                            }
+
+
+                            double finalPrice = room.price;
+                            if (isReturning) {
+                                finalPrice *= 0.9;
+                                System.out.println("Returning customer detected. 10% discount applied.");
+                            }
 
                             int paymentOption;
 
@@ -260,18 +267,20 @@ public class Room {
                                 }
                             }
 
+
                             String method = switch (paymentOption) {
                                 case 1 -> "Credit Card";
                                 case 2 -> "Cash";
                                 case 3 -> "Online";
-                                default -> "Unknown";
+                                default -> "Unknown"; // will never happen because we validated it above
                             };
+
 
                             Payment payment = new Payment(selectedNumber, finalPrice, method);
                             if (payment.processPayment()) {
                                 Receipt.generateReceipt(room.roomNumber, room.roomType, finalPrice, method, loyalCustomer);
                                 loyalCustomer.addPoints(10);
-//                                System.out.println(loyalCustomer.getName() + " now has " + loyalCustomer.getPoints() + " loyalty points.");
+                                System.out.println(loyalCustomer.getName() + " now has " + loyalCustomer.getPoints() + " loyalty points.");
                                 bookingComplete = true;
                             } else {
                                 System.out.println("Booking not completed, no receipt generated.");
@@ -289,10 +298,7 @@ public class Room {
                                     availableRoomsExist = true;
                                 }
                             }
-                            loyalCustomer.addPoints(10);
-                            System.out.println("10 loyalty points added to the customer's account.");
 
-                            bookingComplete = true;
                             if (!availableRoomsExist) {
                                 System.out.println("\nNo available rooms for the selected type.");
                                 bookingComplete = true;
@@ -332,6 +338,7 @@ public class Room {
             }
         }
 
+
         if (roomNumber == -1) return;
 
         boolean roomFound = false;
@@ -368,6 +375,103 @@ public class Room {
         }
     }
 
+    public static void leaveFeedback(Scanner scanner) {
+        // Ask for customer's phone number
+        System.out.print("\nEnter customer's phone number: +");
+        scanner.nextLine();
+        String phone = scanner.nextLine();
+
+        // Find the customer with the phone number
+        Customer foundCustomer = null;
+        for (Customer c : loyalCustomers) {
+            if (c.getPhoneNumber().equals(phone)) {
+                foundCustomer = c;
+                break;
+            }
+        }
+
+        // If the customer is not found, show an error message and return
+        if (foundCustomer == null) {
+            System.out.println("Customer not found. Feedback can only be left for existing customers.");
+            return;
+        }
+
+        // If the customer is found, identify if they are loyal
+        if (foundCustomer instanceof LoyalCustomer) {
+            System.out.println("Loyal Customer identified! Thank you for your continued support.");
+        } else {
+            System.out.println("Thank you for staying with us!");
+        }
+
+        // Ask for feedback rating
+        int rating = 0;
+        while (true) {
+            System.out.print("Enter feedback rating (1 to 5): ");
+            try {
+                rating = Integer.parseInt(scanner.nextLine());
+                if (rating >= 1 && rating <= 5) break;  // Only accept ratings between 1 and 5
+                System.out.println("Rating must be between 1 and 5.");
+            } catch (Exception e) {
+                System.out.println("Invalid number. Try again.");
+            }
+        }
+
+        // Optional: Ask for a feedback comment
+        System.out.print("Enter feedback comment (optional): ");
+        String comment = scanner.nextLine();
+
+        // Create feedback and add to the list
+        Feedback feedback = new Feedback(foundCustomer, rating, comment);
+        allFeedback.add(feedback);
+
+        // If it's a loyal customer, add points
+        if (foundCustomer instanceof LoyalCustomer) {
+            ((LoyalCustomer) foundCustomer).addPoints(5);  // Award loyalty points for feedback
+            System.out.println("Thank you for your feedback! You earned 5 loyalty points.");
+        }
+
+        // Display the feedback saved
+        System.out.println("\nFeedback saved:");
+        System.out.println(feedback);
+    }
+
+
+
+    public static void showRatingSummary() {
+        if (allFeedback.isEmpty()) {
+            System.out.println("No feedbacks available yet.");
+            return;
+        }
+
+        int[] ratingsCount = new int[5]; // Array to store counts for ratings 1-5
+        int totalRatings = 0;
+        double totalScore = 0;
+
+        // Count the ratings
+        for (Feedback feedback : allFeedback) {
+            int rating = feedback.getRating();
+            if (rating >= 1 && rating <= 5) {
+                ratingsCount[rating - 1]++;
+                totalRatings++;
+                totalScore += rating;
+            }
+        }
+
+        // Calculate average rating
+        double averageRating = totalRatings > 0 ? totalScore / totalRatings : 0;
+
+        // Display rating summary
+        System.out.println("\n--- Hotel Rating Summary ---");
+        System.out.println("Total Feedbacks: " + totalRatings);
+        System.out.println("1 star: " + ratingsCount[0]);
+        System.out.println("2 stars: " + ratingsCount[1]);
+        System.out.println("3 stars: " + ratingsCount[2]);
+        System.out.println("4 stars: " + ratingsCount[3]);
+        System.out.println("5 stars: " + ratingsCount[4]);
+        System.out.println("Average Rating: " + (totalRatings > 0 ? String.format("%.2f", averageRating) : "N/A"));
+    }
+
+
     private static void initializeRooms() {
         for (int i = 0; i < rooms.length; i++) {
             int roomNum = i + 1;
@@ -381,20 +485,20 @@ public class Room {
     }
 
     public static double getPriceForType(RoomType type) {
-        double price = 0.0;
+            double price = 0.0;
 
-        switch (type) {
-            case SINGLE_ROOM:
-                price = 60.0;
-                break;
-            case DOUBLE_ROOM:
-                price = 100.0;
-                break;
-            case VIP_ROOM:
-                price = 200.0;
-                break;
-        }
-        return price;
+            switch (type) {
+                case SINGLE_ROOM:
+                    price = 60.0;
+                    break;
+                case DOUBLE_ROOM:
+                    price = 100.0;
+                    break;
+                case VIP_ROOM:
+                    price = 200.0;
+                    break;
+            }
+            return price;
     }
 
     public static void main(String[] args) {
