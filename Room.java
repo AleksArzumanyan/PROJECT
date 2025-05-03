@@ -272,7 +272,7 @@ public class Room {
                                 case 1 -> "Credit Card";
                                 case 2 -> "Cash";
                                 case 3 -> "Online";
-                                default -> "Unknown"; // will never happen because we validated it above
+                                default -> "Unknown"; 
                             };
 
 
@@ -409,7 +409,7 @@ public class Room {
             System.out.print("Enter feedback rating (1 to 5): ");
             try {
                 rating = Integer.parseInt(scanner.nextLine());
-                if (rating >= 1 && rating <= 5) break;  // Only accept ratings between 1 and 5
+                if (rating >= 1 && rating <= 5) break;  
                 System.out.println("Rating must be between 1 and 5.");
             } catch (Exception e) {
                 System.out.println("Invalid number. Try again.");
@@ -426,7 +426,7 @@ public class Room {
 
         // If it's a loyal customer, add points
         if (foundCustomer instanceof LoyalCustomer) {
-            ((LoyalCustomer) foundCustomer).addPoints(5);  // Award loyalty points for feedback
+            ((LoyalCustomer) foundCustomer).addPoints(5);  
             System.out.println("Thank you for your feedback! You earned 5 loyalty points.");
         }
 
@@ -443,7 +443,7 @@ public class Room {
             return;
         }
 
-        int[] ratingsCount = new int[5]; // Array to store counts for ratings 1-5
+        int[] ratingsCount = new int[5]; 
         int totalRatings = 0;
         double totalScore = 0;
 
