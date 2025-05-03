@@ -163,10 +163,25 @@ public class Room {
                     }
                     break;
                 }
+                String surname;
+                while (true) {
+                    System.out.print("Enter your surname: ");
+                    surname = scanner.nextLine();
+
+                    if (surname.length() <= 1) {
+                        System.out.println("Surame must be longer than 1 character.");
+                        continue;
+                    }
+                    if (!surname.matches("[A-Za-z ]+")) {
+                        System.out.println("Invalid surname. Only letters and spaces are allowed.");
+                        continue;
+                    }
+                    break;
+                }
 
 
                 String email;
-                while(true) {
+                while (true) {
                     System.out.print("Enter your email: ");
                     email = scanner.nextLine();
 
@@ -212,7 +227,7 @@ public class Room {
                 }
 
                 if (loyalCustomer == null) {
-                    loyalCustomer = new LoyalCustomer(name, email, phoneNumber, passportNumber);
+                    loyalCustomer = new LoyalCustomer(name, surname, email, phoneNumber, passportNumber);
                     loyalCustomers.add(loyalCustomer);
                 }
 
@@ -222,29 +237,30 @@ public class Room {
                     if (room.roomNumber == selectedNumber && room.roomType == selectedType) {
                         roomFound = true;
 
+                        // Room booking logic
                         if (room.isAvailable) {
                             room.isAvailable = false;
                             room.customer = loyalCustomer;
                             System.out.println("Room " + selectedNumber + " is now booked.");
 
-                            // Apply 10% discount if this passport is used before
+                            // Check if the customer has booked before (based on their passport number)
                             boolean isReturning = false;
                             for (LoyalCustomer lc : loyalCustomers) {
-                                if (!lc.equals(loyalCustomer) && lc.getPassportNumber().equals(passportNumber)) {
-                                    isReturning = true;
+                                if (lc.getPassportNumber().equals(passportNumber)) {
+                                    isReturning = true; // They are a returning customer
                                     break;
                                 }
                             }
 
-
+                            // If they are a returning customer, apply a 10% discount
                             double finalPrice = room.price;
                             if (isReturning) {
-                                finalPrice *= 0.9;
+                                finalPrice *= 0.9;  // Apply a 10% discount for returning customers
                                 System.out.println("Returning customer detected. 10% discount applied.");
                             }
 
+                            // Process payment
                             int paymentOption;
-
                             while (true) {
                                 System.out.println("Please select payment method:");
                                 System.out.println("1. Credit Card");
@@ -267,20 +283,27 @@ public class Room {
                                 }
                             }
 
-
                             String method = switch (paymentOption) {
                                 case 1 -> "Credit Card";
                                 case 2 -> "Cash";
                                 case 3 -> "Online";
-                                default -> "Unknown"; 
+                                default -> "Unknown";
                             };
 
-
+                            // Process payment
                             Payment payment = new Payment(selectedNumber, finalPrice, method);
                             if (payment.processPayment()) {
+                                // Generate receipt without the loyalty points part
                                 Receipt.generateReceipt(room.roomNumber, room.roomType, finalPrice, method, loyalCustomer);
-                                loyalCustomer.addPoints(10);
-                                System.out.println(loyalCustomer.getName() + " now has " + loyalCustomer.getPoints() + " loyalty points.");
+
+                                // Acknowledge the loyalty status without adding points
+                                System.out.println(loyalCustomer.getName() + " is a loyal customer and will receive a 10% discount next time.");
+
+                                // After a successful booking, add the customer to loyalCustomers if not already there
+                                if (!isReturning) {
+                                    loyalCustomers.add(loyalCustomer);
+                                }
+
                                 bookingComplete = true;
                             } else {
                                 System.out.println("Booking not completed, no receipt generated.");
@@ -306,6 +329,7 @@ public class Room {
                             System.out.println();
                             break;
                         }
+
                     }
                 }
 
@@ -409,7 +433,7 @@ public class Room {
             System.out.print("Enter feedback rating (1 to 5): ");
             try {
                 rating = Integer.parseInt(scanner.nextLine());
-                if (rating >= 1 && rating <= 5) break;  
+                if (rating >= 1 && rating <= 5) break;
                 System.out.println("Rating must be between 1 and 5.");
             } catch (Exception e) {
                 System.out.println("Invalid number. Try again.");
@@ -424,17 +448,11 @@ public class Room {
         Feedback feedback = new Feedback(foundCustomer, rating, comment);
         allFeedback.add(feedback);
 
-        // If it's a loyal customer, add points
-        if (foundCustomer instanceof LoyalCustomer) {
-            ((LoyalCustomer) foundCustomer).addPoints(5);  
-            System.out.println("Thank you for your feedback! You earned 5 loyalty points.");
-        }
 
         // Display the feedback saved
         System.out.println("\nFeedback saved:");
         System.out.println(feedback);
     }
-
 
 
     public static void showRatingSummary() {
@@ -443,7 +461,7 @@ public class Room {
             return;
         }
 
-        int[] ratingsCount = new int[5]; 
+        int[] ratingsCount = new int[5];
         int totalRatings = 0;
         double totalScore = 0;
 
@@ -485,20 +503,20 @@ public class Room {
     }
 
     public static double getPriceForType(RoomType type) {
-            double price = 0.0;
+        double price = 0.0;
 
-            switch (type) {
-                case SINGLE_ROOM:
-                    price = 60.0;
-                    break;
-                case DOUBLE_ROOM:
-                    price = 100.0;
-                    break;
-                case VIP_ROOM:
-                    price = 200.0;
-                    break;
-            }
-            return price;
+        switch (type) {
+            case SINGLE_ROOM:
+                price = 60.0;
+                break;
+            case DOUBLE_ROOM:
+                price = 100.0;
+                break;
+            case VIP_ROOM:
+                price = 200.0;
+                break;
+        }
+        return price;
     }
 
     public static void main(String[] args) {
