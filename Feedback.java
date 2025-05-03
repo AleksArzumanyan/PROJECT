@@ -3,7 +3,7 @@
  */
 public class Feedback {
     private Customer customer;
-    private int rating; // from 1 to 5
+    private int rating;
     private String comment;
 
     public Feedback(Customer customer, int rating, String comment) {
