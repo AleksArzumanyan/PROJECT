@@ -149,11 +149,7 @@ public class Gym {
                 System.out.println("🎉 First time customer — no discount, but now enrolled in loyalty program!");
             }
 
-            // Receipt
-            System.out.println("\n--- Gym Booking Receipt ---");
-            System.out.println("Customer: " + name + " " + surname);
-            System.out.println("Plan: " + plans[planType][duration - 1] + " (" + (planType == 0 ? "with pool" : "without pool") + ")");
-            System.out.printf("Final Price: $%.2f\n", finalPrice);
+            GymReceipt.generateGymReceipt(finalPrice, customer);
 
         } catch (InputMismatchException e) {
             System.out.println("Invalid input.");
