@@ -18,6 +18,6 @@ public class LoyalCustomer extends Customer {
 
     @Override
     public String toString() {
-        return "GuestID: " + guestID + ", Name: " + name + ", Surname: " + surname + ", Email: " + email + ", Phone: " + phoneNumber + ", Passport: " + passportNumber;
+        return "GuestID: " + guestID + "\n" + "Name: " + name +"\n" + "Surname: " + surname + "\n" +"Email: " + email +"\n" + "Phone: +" + phoneNumber + "\n" + "Passport: " + passportNumber +"\n";
     }
 }
