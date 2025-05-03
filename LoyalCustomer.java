@@ -1,6 +1,6 @@
 
 /**
- * The LoyalCustomer class extends Customer and tracks loyalty points for discount eligibility.
+ * The LoyalCustomer class extends Customer and tracks loyalty points for discount opportunity.
  */
 class LoyalCustomer extends Customer {
     private int loyaltyPoints;
