@@ -35,7 +35,8 @@ public class TableReservation{
             System.out.println("2. Unbook a Table");
             System.out.println("3. View Booked Tables");
             System.out.println("4. Go Back");
-            System.out.print("Enter your choice (1–4): ");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice (1–5): ");
 
             int choice;
             try {
@@ -45,15 +46,22 @@ public class TableReservation{
                 scanner.nextLine();
                 continue;
             }
-
-            switch (choice) {
-                case 1 -> bookTable(scanner);
-                case 2 -> unbookTable(scanner);
-                case 3 -> showBookedTables();
-                case 4 -> {
-                    return;
-                }
-                default -> System.out.println("Invalid option. Try again.");
+            if (choice == 1) {
+                bookTable(scanner);
+            } else if (choice == 2) {
+                unbookTable(scanner);
+            }else if (choice == 3) {
+                showBookedTables();
+            }
+            else if (choice == 4) {
+                break;
+            }
+            else if (choice == 5) {
+                System.out.println("Goodbye!");
+                System.exit(0);
+            }
+            else {
+                System.out.println("Invalid choice.");
             }
         }
     }
