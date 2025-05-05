@@ -1,7 +1,6 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -11,9 +10,7 @@ public class GymReceipt {
      */
     public static void generateGymReceipt(double price, LoyalCustomer customer) {
         String filename = "gym_receipts.txt";
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = new Date();
-        String timestamp = formatter.format(date);
+        String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
         String content =
                 "-------------------------\n" +
