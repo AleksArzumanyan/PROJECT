@@ -25,8 +25,9 @@ public class Gym {
                 System.out.println("\n--- Gym Appointment Menu ---");
                 System.out.println("1. Book With Pool");
                 System.out.println("2. Book Without Pool");
-                System.out.println("3. Exit");
-                System.out.print("Enter your choice (1–3): ");
+                System.out.println("3. Return to Main Menu");
+                System.out.println("4. Exit");
+                System.out.print("Enter your choice (1–4): ");
 
                 int option = scanner.nextInt();
                 scanner.nextLine(); // clear newline
@@ -34,9 +35,13 @@ public class Gym {
                 if (option == 1 || option == 2) {
                     handleBooking(scanner, option - 1);
                 } else if (option == 3) {
-                    System.out.println("Exiting Gym Menu.");
                     break;
-                } else {
+                }
+                else if (option == 4) {
+                    System.out.println("Goodbye!");
+                    System.exit(0);
+                }
+                else {
                     System.out.println("Invalid choice.");
                 }
 
