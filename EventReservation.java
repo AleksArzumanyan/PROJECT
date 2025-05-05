@@ -224,8 +224,9 @@ public class EventReservation {
             System.out.println("1. Book Event");
             System.out.println("2. Cancel Event");
             System.out.println("3. View All Events");
-            System.out.println("4. Exit");
-            System.out.print("Enter your choice (1-4): ");
+            System.out.println("4. Go Back");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice (1-5): ");
             int choice;
             try {
                 choice = scanner.nextInt();
@@ -236,21 +237,22 @@ public class EventReservation {
                 continue;
             }
             EventReservation er = new EventReservation();
-            switch (choice) {
-                case 1:
-                    er.bookEvent(scanner);
-                    break;
-                case 2:
-                    er.cancelEvent(scanner);
-                    break;
-                case 3:
-                    er.viewAllEvents();
-                    break;
-                case 4:
-                    System.out.println("Exiting Event Menu.");
-                    return;
-                default:
-                    System.out.println("Invalid choice.");
+            if (choice == 1) {
+                er.bookEvent(scanner);
+            } else if (choice == 2) {
+                er.cancelEvent(scanner);
+            }else if (choice == 3) {
+                er.viewAllEvents();
+            }
+            else if (choice == 4) {
+                break;
+            }
+            else if (choice == 5) {
+                System.out.println("Goodbye!");
+                System.exit(0);
+            }
+            else {
+                System.out.println("Invalid choice.");
             }
         }
     }
