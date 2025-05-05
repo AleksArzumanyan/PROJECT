@@ -12,7 +12,6 @@ public class EventReservation {
     /**
      * Types of event packages offered by the hotel.
      */
-
     public enum EventPackageType {
         BASIC(1000, "Up to 50 guests, basic decor"),
         SILVER(3000, "Up to 100 guests, standard decor + sound system"),
@@ -75,20 +74,16 @@ public class EventReservation {
         }
         this.packageType = types[choice - 1];
 
-        System.out.print("Enter event date (yyyy-MM-dd): ");
-        String dateStr = scanner.nextLine();
-        System.out.print("Enter event time (HH:mm): ");
-        String timeStr = scanner.nextLine();
-        try {
-            this.eventDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
-            this.eventTime = timeStr;
-        } catch (Exception e) {
-            System.out.println("Invalid date/time format.");
-            return;
-        }
+        // Get valid event date
+        this.eventDate = getValidDate(scanner);
 
-        System.out.print("Enter customer passport number: ");
-        String passport = scanner.nextLine().trim();
+        // Get valid event time
+        this.eventTime = getValidTime(scanner);
+
+        // Get valid passport number
+        String passport = getValidPassport(scanner);
+
+        // Check if customer exists or needs to be created
         LoyalCustomer existing = null;
         for (LoyalCustomer lc : Room.getLoyalCustomers()) {
             if (lc.getPassportNumber().equalsIgnoreCase(passport)) {
@@ -125,6 +120,68 @@ public class EventReservation {
 
         EventReceipt.generateEventReceipt(this, finalPrice);
         System.out.println("Event booked with ID: " + this.eventId);
+    }
+
+    // Method to get a valid event date
+    private Date getValidDate(Scanner scanner) {
+        Date date = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setLenient(false); // Makes date parsing strict (e.g., 2025-02-30 will fail)
+
+        while (date == null) {
+            System.out.print("Enter event date (yyyy-MM-dd): ");
+            String dateStr = scanner.nextLine();
+            try {
+                date = sdf.parse(dateStr);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(date);
+
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH) + 1; // Calendar.MONTH is 0-based
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                if (year < 2025 || month < 1 || month > 12 || day < 1 || day > 31) {
+                    System.out.println("Date must be in correct range (Year ≥ 2025, Month 1–12, Day 1–31).");
+                    date = null;
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid date format or out-of-range date. Please use yyyy-MM-dd.");
+            }
+        }
+        return date;
+    }
+
+
+    // Method to get a valid event time
+    private String getValidTime(Scanner scanner) {
+        String time = "";
+        boolean valid = false;
+        while (!valid) {
+            System.out.print("Enter event time (HH:mm): ");
+            time = scanner.nextLine();
+            if (time.matches("^(?:[01]\\d|2[0-3]):(?:[0-5]\\d)$")) {
+                valid = true;
+            } else {
+                System.out.println("Invalid time format. Please enter in HH:mm format.");
+            }
+        }
+        return time;
+    }
+
+    // Method to get a valid passport number
+    private String getValidPassport(Scanner scanner) {
+        String passport = "";
+        boolean valid = false;
+        while (!valid) {
+            System.out.print("Enter customer passport number: ");
+            passport = scanner.nextLine().trim();
+            if (passport.length() >= 5 && passport.equals(passport.toUpperCase())) {
+                valid = true;
+            } else {
+                System.out.println("Invalid passport number. It must be at least 5 characters long and in uppercase.");
+            }
+        }
+        return passport;
     }
 
     public void cancelEvent(Scanner scanner) {
@@ -204,8 +261,8 @@ public class EventReservation {
     public Date getEventDate() { return eventDate; }
     public String getEventTime() { return eventTime; }
     public LoyalCustomer getCustomer() { return customer; }
-}
 
-/**
- * Utility class to generate event receipts.
- */
+    public static void main(String[] args) {
+        startEventReservationSystem();
+    }
+}
