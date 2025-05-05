@@ -23,8 +23,8 @@ public class Room {
     private double price;
     private RoomType roomType;
     private Customer customer;
-    private static ArrayList<LoyalCustomer> loyalCustomers = new ArrayList<>();
-    private static ArrayList<Feedback> allFeedback = new ArrayList<>();
+    public static ArrayList<LoyalCustomer> loyalCustomers = new ArrayList<>();
+
 
 
     public Room(int roomNumber, double price, RoomType roomType) {
@@ -59,10 +59,9 @@ public class Room {
                 System.out.println("1. Book a Room");
                 System.out.println("2. Unbook a Room");
                 System.out.println("3. View All Booked Rooms");
-                System.out.println("4. Leave Feedback");
-                System.out.println("5. Show Hotel Rating Summary");
-                System.out.println("6. Exit");
-                System.out.print("Enter your choice (1–6): ");
+                System.out.println("4. Return to Main Menu");
+                System.out.println("5. Exit");
+                System.out.print("Enter your choice (1–4): ");
 
                 int option = scanner.nextInt();
 
@@ -72,14 +71,12 @@ public class Room {
                     handleUnbooking(scanner);
                 } else if (option == 3) {
                     showBookedRooms();
-                } else if (option == 4) {
-                    leaveFeedback(scanner);
-                } else if (option == 5) {
-                    showRatingSummary();
-                } else if (option == 6) {
-                    System.out.println("Goodbye!");
+                } else if (option ==4) {
                     break;
-                } else {
+                } else if (option ==5) {
+                    System.out.println("Goodbye!");
+                    System.exit(0);
+                }else {
                     System.out.println("Invalid choice.");
                 }
             } catch (InputMismatchException e) {
@@ -378,95 +375,6 @@ public class Room {
         }
     }
 
-    public static void leaveFeedback(Scanner scanner) {
-        // Ask for customer's phone number
-        System.out.print("\nEnter customer's phone number: +");
-        scanner.nextLine();
-        String phone = scanner.nextLine();
-
-        // Find the customer with the phone number
-        Customer foundCustomer = null;
-        for (Customer c : loyalCustomers) {
-            if (c.getPhoneNumber().equals(phone)) {
-                foundCustomer = c;
-                break;
-            }
-        }
-
-        // If the customer is not found, show an error message and return
-        if (foundCustomer == null) {
-            System.out.println("Customer not found. Feedback can only be left for existing customers.");
-            return;
-        }
-
-        // If the customer is found, identify if they are loyal
-        if (foundCustomer instanceof LoyalCustomer) {
-            System.out.println("Loyal Customer identified! Thank you for your continued support.");
-        } else {
-            System.out.println("Thank you for staying with us!");
-        }
-
-        // Ask for feedback rating
-        int rating = 0;
-        while (true) {
-            System.out.print("Enter feedback rating (1 to 5): ");
-            try {
-                rating = Integer.parseInt(scanner.nextLine());
-                if (rating >= 1 && rating <= 5) break;
-                System.out.println("Rating must be between 1 and 5.");
-            } catch (Exception e) {
-                System.out.println("Invalid number. Try again.");
-            }
-        }
-
-        // Optional: Ask for a feedback comment
-        System.out.print("Enter feedback comment (optional): ");
-        String comment = scanner.nextLine();
-
-        // Create feedback and add to the list
-        Feedback feedback = new Feedback(foundCustomer, rating, comment);
-        allFeedback.add(feedback);
-
-
-        // Display the feedback saved
-        System.out.println("\nFeedback saved:");
-        System.out.println(feedback);
-    }
-
-
-    public static void showRatingSummary() {
-        if (allFeedback.isEmpty()) {
-            System.out.println("No feedbacks available yet.");
-            return;
-        }
-
-        int[] ratingsCount = new int[5];
-        int totalRatings = 0;
-        double totalScore = 0;
-
-        // Count the ratings
-        for (Feedback feedback : allFeedback) {
-            int rating = feedback.getRating();
-            if (rating >= 1 && rating <= 5) {
-                ratingsCount[rating - 1]++;
-                totalRatings++;
-                totalScore += rating;
-            }
-        }
-
-        // Calculate average rating
-        double averageRating = totalRatings > 0 ? totalScore / totalRatings : 0;
-
-        // Display rating summary
-        System.out.println("\n--- Hotel Rating Summary ---");
-        System.out.println("Total Feedbacks: " + totalRatings);
-        System.out.println("1 star: " + ratingsCount[0]);
-        System.out.println("2 stars: " + ratingsCount[1]);
-        System.out.println("3 stars: " + ratingsCount[2]);
-        System.out.println("4 stars: " + ratingsCount[3]);
-        System.out.println("5 stars: " + ratingsCount[4]);
-        System.out.println("Average Rating: " + (totalRatings > 0 ? String.format("%.2f", averageRating) : "N/A"));
-    }
 
 
     private static void initializeRooms() {
@@ -496,9 +404,5 @@ public class Room {
                 break;
         }
         return price;
-    }
-
-    public static void main(String[] args) {
-        Room.startBookingSystem();
     }
 }
