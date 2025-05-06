@@ -6,39 +6,17 @@ import java.util.Scanner;
  * It allows users to confirm their payment method and finalize the booking.
  */
 public class Payment {
-
-    /**
-     * The room number for which the payment is being made.
-     */
+    
     private int roomNumber;
-
-    /**
-     * The amount to be paid for the room booking.
-     */
     private double amount;
-
-    /**
-     * The payment method chosen by the user.
-     */
     private String paymentMethod;
 
-    /**
-     * Constructs a Payment object with the room number, amount, and payment method.
-     *
-     * @param roomNumber the room number for which payment is being made
-     * @param amount the amount to be paid for the room
-     * @param paymentMethod the method of payment (e.g., Credit Card, Cash, Online)
-     */
     public Payment(int roomNumber, double amount, String paymentMethod) {
         this.roomNumber = roomNumber;
         this.amount = amount;
         this.paymentMethod = paymentMethod;
     }
 
-    /**
-     * Processes the payment for the room booking.
-     * Asks the user to confirm the payment and handles the outcome.
-     */
     public boolean processPayment() {
         Scanner scanner = new Scanner(System.in);
 
@@ -59,31 +37,26 @@ public class Payment {
                 }
                 validInput = true;
             } catch (IllegalArgumentException e) {
-                System.out.println("❌ Error: " + e.getMessage());
+                System.out.println("Error: " + e.getMessage());
             } catch (InputMismatchException e) {
-                System.out.println("❌ Error: Invalid input type. Please enter 'yes' or 'no'.");
+                System.out.println("Error: Invalid input type. Please enter 'yes' or 'no'.");
                 scanner.nextLine();
             } catch (Exception e) {
-                System.out.println("❌ Unexpected error: " + e.getMessage());
+                System.out.println("Unexpected error: " + e.getMessage());
             }
         }
 
         if (confirmation.equals("yes")) {
-            System.out.println("✅ Payment confirmed. Booking completed successfully.");
+            System.out.println("Payment confirmed. Booking completed successfully.");
             return true;
         } else {
-            System.out.println("❌ Payment not confirmed. Booking canceled.");
+            System.out.println("Payment not confirmed. Booking canceled.");
             cancelBooking(roomNumber);
             return false;
         }
     }
 
 
-    /**
-     * Cancels the booking by making the room available again.
-     *
-     * @param roomNumber the number of the room to cancel the booking for
-     */
     private void cancelBooking(int roomNumber) {
         for (Room room : Room.getRooms()) {
             if (room.getRoomNumber() == roomNumber) {
