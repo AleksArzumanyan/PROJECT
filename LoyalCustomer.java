@@ -5,7 +5,6 @@ public class LoyalCustomer extends Customer {
     }
 
     public double calculateFinalPrice(double roomPrice) {
-        // Apply a 10% discount for loyal customers
         return roomPrice * 0.9;
     }
 
