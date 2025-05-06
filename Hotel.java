@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Hotel {
@@ -16,47 +17,52 @@ public class Hotel {
             System.out.println("6. Show Rating Summary");
             System.out.println("7. Exit");
 
-
             System.out.print("Enter your choice (1-7): ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
 
-            switch (choice) {
-                case 1:
-                    Room.startBookingSystem();
-                    break;
+            try {
+                int choice = scanner.nextInt();
+                scanner.nextLine();
 
-                case 2:
-                    Gym.startGymBooking();
-                    break;
+                switch (choice) {
+                    case 1:
+                        Room.startBookingSystem();
+                        break;
 
-                case 3:
-                    Restaurant.startReservationSystem();
-                    break;
+                    case 2:
+                        Gym.startGymBooking();
+                        break;
 
-                case 4:
-                    EventReservation.startEventReservationSystem();
-                    break;
+                    case 3:
+                        TableReservation.startReservationSystem();
+                        break;
 
-                case 5:
-                    Feedback.leaveFeedback(scanner);
-                    break;
+                    case 4:
+                        EventReservation.startEventReservationSystem();
+                        break;
 
-                case 6:
-                    Feedback.showRatingSummary();
-                    break;
+                    case 5:
+                        Feedback.leaveFeedback(scanner);
+                        break;
 
-                case 7:
-                    running = false;
-                    System.out.println("Thank you for using our hotel system!");
-                    break;
+                    case 6:
+                        Feedback.showRatingSummary();
+                        break;
 
+                    case 7:
+                        running = false;
+                        System.out.println("Thank you for using our hotel system!");
+                        break;
 
-                default:
-                    System.out.println("Invalid choice. Please try again.");
+                    default:
+                        System.out.println("Invalid choice. Please enter a number between 1 and 7.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number between 1 and 7.");
+                scanner.nextLine(); 
+            } catch (Exception e) {
+                System.out.println("An unexpected error occurred: " + e.getMessage());
             }
         }
-
         scanner.close();
     }
 }
