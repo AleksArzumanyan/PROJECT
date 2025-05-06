@@ -72,7 +72,7 @@ public class Gym {
             // Get customer details
             String name;
             while (true) {
-                System.out.print("Enter guest's name: ");
+                System.out.print("Enter name: ");
                 name = scanner.nextLine();
 
                 if (name.length() <= 1) {
@@ -87,7 +87,7 @@ public class Gym {
             }
             String surname;
             while (true) {
-                System.out.print("Enter guest's surname: ");
+                System.out.print("Enter surname: ");
                 surname = scanner.nextLine();
 
                 if (surname.length() <= 1) {
@@ -103,7 +103,7 @@ public class Gym {
 
             String email;
             while (true) {
-                System.out.print("Enter guest's email: ");
+                System.out.print("Enter email: ");
                 email = scanner.nextLine();
 
                 if (email.length() <= 5) {
@@ -119,7 +119,7 @@ public class Gym {
 
             String phoneNumber;
             while (true) {
-                System.out.print("Enter guest's phone number: +");
+                System.out.print("Enter phone number: +");
                 phoneNumber = scanner.nextLine();
                 if (!phoneNumber.matches("\\d{8,15}")) {
                     System.out.println("Invalid phone number. It should be 8 to 15 digits.");
@@ -130,7 +130,7 @@ public class Gym {
 
             String passportNumber;
             while (true) {
-                System.out.print("Enter guest's passport number: ");
+                System.out.print("Enter passport number: ");
                 passportNumber = scanner.nextLine();
                 if (passportNumber.length() < 5 || !passportNumber.matches("[A-Z0-9]+")) {
                     System.out.println("Invalid passport number. Must be 5+ letters/digits.");
