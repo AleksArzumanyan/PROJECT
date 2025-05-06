@@ -1,5 +1,4 @@
-import java.util.Scanner;
-import java.util.InputMismatchException;
+import java.util.*;
 
 /**
  * Enum representing different types of tables.
@@ -17,7 +16,7 @@ public class Restaurant{
     private int tableNumber;
     private boolean isAvailable = true;
     private TableType tableType;
-    private static Restaurant[] tables = new Restaurant[30]; // Total of 30 tables
+    private static Restaurant[] tables = new Restaurant[30];
 
     public Restaurant(int tableNumber, TableType tableType) {
         this.tableNumber = tableNumber;
@@ -45,25 +44,33 @@ public class Restaurant{
                 scanner.nextLine();
                 continue;
             }
-
+            
             switch (choice) {
-                case 1 -> bookTable(scanner);
-                case 2 -> unbookTable(scanner);
-                case 3 -> showBookedTables();
-                case 4 -> {
+                case 1:
+                    bookTable(scanner);
+                    break;
+                case 2:
+                    unbookTable(scanner);
+                    break;
+                case 3:
+                    showBookedTables();
+                    break;
+                case 4:
                     return;
-                }
-                default -> System.out.println("Invalid option. Try again.");
+                default:
+                    System.out.println("Invalid option. Try again.");
+                    break;
             }
+
         }
     }
 
     private static void initializeTables() {
         for (int i = 0; i < tables.length; i++) {
             TableType type;
-            if (i < 10) type = TableType.SMALL_TABLE;      // 0–9
-            else if (i < 20) type = TableType.MEDIUM_TABLE; // 10–19
-            else type = TableType.LARGE_TABLE;              // 20–29
+            if (i < 10) type = TableType.SMALL_TABLE;
+            else if (i < 20) type = TableType.MEDIUM_TABLE;
+            else type = TableType.LARGE_TABLE;
 
             tables[i] = new Restaurant(i + 1, type);
         }
@@ -87,12 +94,20 @@ public class Restaurant{
                 continue;
             }
 
-            if (choice == 4) return;
-
+            if (choice == 4) {
+                return;
+            }
+            
             TableType selectedType;
-            if (choice == 1) selectedType = TableType.SMALL_TABLE;
-            else if (choice == 2) selectedType = TableType.MEDIUM_TABLE;
-            else if (choice == 3) selectedType = TableType.LARGE_TABLE;
+            if (choice == 1) {
+                selectedType = TableType.SMALL_TABLE;
+            }
+            else if (choice == 2) {
+                selectedType = TableType.MEDIUM_TABLE;
+            }
+            else if (choice == 3) {
+                selectedType = TableType.LARGE_TABLE;
+            }
             else {
                 System.out.println("Invalid type.");
                 continue;
@@ -109,7 +124,7 @@ public class Restaurant{
             System.out.println();
 
             if (!found) {
-                System.out.println("No available tables of this type.");
+                System.out.println("No available tables of this type, choose another.");
                 return;
             }
 
@@ -158,7 +173,9 @@ public class Restaurant{
             return;
         }
 
-        if (number == -1) return;
+        if (number == -1) {
+            return;
+        }
 
         for (Restaurant table : tables) {
             if (table.tableNumber == number) {
@@ -167,7 +184,7 @@ public class Restaurant{
                     System.out.println("Table " + number + " has been unbooked.");
                     return;
                 } else {
-                    System.out.println("That table is already available.");
+                    System.out.println("That table is not booked.");
                     return;
                 }
             }
