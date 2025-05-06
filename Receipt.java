@@ -6,9 +6,7 @@ import java.util.Date;
 
 
 public class Receipt {
-    /**
-     * Generates a receipt for the room booking and appends it to a single receipts file.
-     */
+    
     public static void generateReceipt(int roomNumber, RoomType type, double price, String method,Customer customer) {
         String filename = "receipts.txt";
         String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
@@ -26,8 +24,7 @@ public class Receipt {
                         "Customer Info : " + "\n" + customer + "\n" +
                         "Thank you for staying with us!\n\n";
 
-        try (FileWriter fileWriter = new FileWriter(filename, true);
-             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filename, true))) {
             bufferedWriter.write(content);
             System.out.println("Receipt added to: " + filename);
         } catch (IOException e) {
