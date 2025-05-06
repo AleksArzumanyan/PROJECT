@@ -13,13 +13,13 @@ enum TableType {
 /**
  * Table class for restaurant table reservation in a hotel.
  */
-public class TableReservation{
+public class Restaurant{
     private int tableNumber;
     private boolean isAvailable = true;
     private TableType tableType;
-    private static TableReservation[] tables = new TableReservation[30]; // Total of 30 tables
+    private static Restaurant[] tables = new Restaurant[30]; // Total of 30 tables
 
-    public TableReservation(int tableNumber, TableType tableType) {
+    public Restaurant(int tableNumber, TableType tableType) {
         this.tableNumber = tableNumber;
         this.tableType = tableType;
         this.isAvailable = true;
@@ -35,8 +35,7 @@ public class TableReservation{
             System.out.println("2. Unbook a Table");
             System.out.println("3. View Booked Tables");
             System.out.println("4. Go Back");
-            System.out.println("5. Exit");
-            System.out.print("Enter your choice (1–5): ");
+            System.out.print("Enter your choice (1–4): ");
 
             int choice;
             try {
@@ -46,22 +45,15 @@ public class TableReservation{
                 scanner.nextLine();
                 continue;
             }
-            if (choice == 1) {
-                bookTable(scanner);
-            } else if (choice == 2) {
-                unbookTable(scanner);
-            }else if (choice == 3) {
-                showBookedTables();
-            }
-            else if (choice == 4) {
-                break;
-            }
-            else if (choice == 5) {
-                System.out.println("Goodbye!");
-                System.exit(0);
-            }
-            else {
-                System.out.println("Invalid choice.");
+
+            switch (choice) {
+                case 1 -> bookTable(scanner);
+                case 2 -> unbookTable(scanner);
+                case 3 -> showBookedTables();
+                case 4 -> {
+                    return;
+                }
+                default -> System.out.println("Invalid option. Try again.");
             }
         }
     }
@@ -73,7 +65,7 @@ public class TableReservation{
             else if (i < 20) type = TableType.MEDIUM_TABLE; // 10–19
             else type = TableType.LARGE_TABLE;              // 20–29
 
-            tables[i] = new TableReservation(i + 1, type);
+            tables[i] = new Restaurant(i + 1, type);
         }
     }
 
@@ -108,7 +100,7 @@ public class TableReservation{
 
             System.out.println("Available " + selectedType + "s:");
             boolean found = false;
-            for (TableReservation table : tables) {
+            for (Restaurant table : tables) {
                 if (table.tableType == selectedType && table.isAvailable) {
                     System.out.print(table.tableNumber + " ");
                     found = true;
@@ -125,7 +117,7 @@ public class TableReservation{
             int tableNum = scanner.nextInt();
             boolean booked = false;
 
-            for (TableReservation table : tables) {
+            for (Restaurant table : tables) {
                 if (table.tableNumber == tableNum && table.tableType == selectedType) {
                     if (table.isAvailable) {
                         table.isAvailable = false;
@@ -150,7 +142,7 @@ public class TableReservation{
 
     private static void unbookTable(Scanner scanner) {
         System.out.println("\n--- Booked Tables ---");
-        for (TableReservation table : tables) {
+        for (Restaurant table : tables) {
             if (!table.isAvailable) {
                 System.out.println("Table " + table.tableNumber + " (" + table.tableType + ")");
             }
@@ -168,7 +160,7 @@ public class TableReservation{
 
         if (number == -1) return;
 
-        for (TableReservation table : tables) {
+        for (Restaurant table : tables) {
             if (table.tableNumber == number) {
                 if (!table.isAvailable) {
                     table.isAvailable = true;
@@ -187,7 +179,7 @@ public class TableReservation{
     private static void showBookedTables() {
         System.out.println("\n--- Booked Tables ---");
         boolean anyBooked = false;
-        for (TableReservation table : tables) {
+        for (Restaurant table : tables) {
             if (!table.isAvailable) {
                 System.out.println("Table " + table.tableNumber + " (" + table.tableType + ") - BOOKED");
                 anyBooked = true;
