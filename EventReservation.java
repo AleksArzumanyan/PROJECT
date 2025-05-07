@@ -74,16 +74,12 @@ public class EventReservation {
         }
         this.packageType = types[choice - 1];
 
-        // Get valid event date
         this.eventDate = getValidDate(scanner);
-
-        // Get valid event time
         this.eventTime = getValidTime(scanner);
 
-        // Get valid passport number
+        
         String passport = getValidPassport(scanner);
 
-        // Check if customer exists or needs to be created
         LoyalCustomer existing = null;
         for (LoyalCustomer lc : Room.getLoyalCustomers()) {
             if (lc.getPassportNumber().equalsIgnoreCase(passport)) {
@@ -122,11 +118,10 @@ public class EventReservation {
         System.out.println("Event booked with ID: " + this.eventId);
     }
 
-    // Method to get a valid event date
     private Date getValidDate(Scanner scanner) {
         Date date = null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        sdf.setLenient(false); // Makes date parsing strict (e.g., 2025-02-30 will fail)
+        sdf.setLenient(false); 
 
         while (date == null) {
             System.out.print("Enter event date (yyyy-MM-dd): ");
@@ -137,7 +132,7 @@ public class EventReservation {
                 cal.setTime(date);
 
                 int year = cal.get(Calendar.YEAR);
-                int month = cal.get(Calendar.MONTH) + 1; // Calendar.MONTH is 0-based
+                int month = cal.get(Calendar.MONTH) + 1; 
                 int day = cal.get(Calendar.DAY_OF_MONTH);
 
                 if (year < 2025 || month < 1 || month > 12 || day < 1 || day > 31) {
@@ -152,7 +147,6 @@ public class EventReservation {
     }
 
 
-    // Method to get a valid event time
     private String getValidTime(Scanner scanner) {
         String time = "";
         boolean valid = false;
@@ -168,7 +162,6 @@ public class EventReservation {
         return time;
     }
 
-    // Method to get a valid passport number
     private String getValidPassport(Scanner scanner) {
         String passport = "";
         boolean valid = false;
@@ -257,7 +250,6 @@ public class EventReservation {
         }
     }
 
-    // Getters
     public String getEventId() { return eventId; }
     public EventPackageType getPackageType() { return packageType; }
     public Date getEventDate() { return eventDate; }
