@@ -33,7 +33,7 @@ public class Hotel {
                         break;
 
                     case 3:
-                        TableReservation.startReservationSystem();
+                        Restaurant.startReservationSystem();
                         break;
 
                     case 4:
