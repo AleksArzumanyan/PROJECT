@@ -10,11 +10,10 @@ public class Gym {
     };
 
     private static final double[][] prices = {
-            {10.0, 100.0, 1000.0}, // With Pool
-            {8.0, 80.0, 800.0}     // Without Pool
+            {10.0, 100.0, 1000.0}, 
+            {8.0, 80.0, 800.0}    
     };
 
-    // Store loyal customers based on passport number
     private static List<LoyalCustomer> loyalCustomers = new ArrayList<>();
 
     public static void startGymBooking() {
@@ -30,7 +29,7 @@ public class Gym {
                 System.out.print("Enter your choice (1–4): ");
 
                 int option = scanner.nextInt();
-                scanner.nextLine(); // clear newline
+                scanner.nextLine(); 
 
                 if (option == 1 || option == 2) {
                     handleBooking(scanner, option - 1);
@@ -62,14 +61,14 @@ public class Gym {
         int duration;
         try {
             duration = scanner.nextInt();
-            scanner.nextLine(); // clear newline
+            scanner.nextLine(); 
 
             if (duration < 1 || duration > 3) {
                 System.out.println("Invalid duration choice.");
                 return;
             }
 
-            // Get customer details
+            
             String name;
             while (true) {
                 System.out.print("Enter name: ");
@@ -139,18 +138,18 @@ public class Gym {
                 break;
             }
 
-            // Price logic
+            
             double basePrice = prices[planType][duration - 1];
             double finalPrice;
             LoyalCustomer customer = findLoyalCustomerByPassport(passportNumber);
 
             if (customer != null) {
-                finalPrice = basePrice * 0.9; // 10% discount for returning customer
+                finalPrice = basePrice * 0.9; 
                 System.out.println("✅ Returning loyal customer — 10% discount applied!");
             } else {
                 customer = new LoyalCustomer(name, surname, email, phoneNumber, passportNumber);
-                loyalCustomers.add(customer); // Add as loyal customer (without points)
-                finalPrice = basePrice; // no discount for new customer
+                loyalCustomers.add(customer); 
+                finalPrice = basePrice; 
                 System.out.println("🎉 First time customer — no discount, but now enrolled in loyalty program!");
             }
 
