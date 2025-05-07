@@ -145,12 +145,12 @@ public class Gym {
 
             if (customer != null) {
                 finalPrice = basePrice * 0.9; 
-                System.out.println("✅ Returning loyal customer — 10% discount applied!");
+                System.out.println("Returning loyal customer — 10% discount applied!");
             } else {
                 customer = new LoyalCustomer(name, surname, email, phoneNumber, passportNumber);
                 loyalCustomers.add(customer); 
                 finalPrice = basePrice; 
-                System.out.println("🎉 First time customer — no discount, but now enrolled in loyalty program!");
+                System.out.println("First time customer — no discount, but now enrolled in loyalty program!");
             }
 
             GymReceipt.generateGymReceipt(finalPrice, customer);
