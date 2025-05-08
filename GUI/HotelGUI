@@ -1,0 +1,44 @@
+package GUI;
+import javax.swing.*;
+import java.awt.*;
+
+public class HotelGUI {
+    private JFrame mainFrame;
+    private CardLayout cardLayout;
+    private JPanel cardPanel;
+
+    public HotelGUI() {
+        initialize();
+    }
+
+    public JFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    private void initialize() {
+        mainFrame = new JFrame("Hotel Management System");
+        mainFrame.setSize(900, 650);
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        cardLayout = new CardLayout();
+        cardPanel = new JPanel(cardLayout);
+        cardPanel.add(new MainMenuPanel(this), "MainMenu");
+        cardPanel.add(new RoomBookingPanel(this), "RoomBooking");
+        cardPanel.add(new GymBookingPanel(this), "GymBooking");
+        cardPanel.add(new RestaurantPanel(this), "RestaurantBooking");
+        cardPanel.add(new EventReservationPanel(this), "EventBooking");
+        cardPanel.add(new FeedbackPanel(this), "FeedbackPanel");
+        cardPanel.add(new FeedbackSummaryGUI(this), "FeedbackSummary");
+
+        mainFrame.add(cardPanel);
+        mainFrame.setVisible(true);
+    }
+
+    public void showPanel(String panelName) {
+        cardLayout.show(cardPanel, panelName);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new HotelGUI());
+    }
+}
