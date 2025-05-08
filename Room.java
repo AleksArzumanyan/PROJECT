@@ -1,21 +1,13 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.io.*;
 
-/**
- * Enum representing different types of rooms.
- */
 enum RoomType {
     SINGLE_ROOM,
     DOUBLE_ROOM,
     VIP_ROOM;
 }
 
-/**
- * The Room class represents a hotel room with information about availability, price,
- * room number, and room type. It also includes a simple console-based room booking system.
- */
 public class Room {
     private boolean isAvailable = true;
     private static Room[] rooms = new Room[120];
@@ -137,13 +129,26 @@ public class Room {
                 System.out.print("\nEnter room number to book: ");
                 try {
                     selectedNumber = scanner.nextInt();
+                    scanner.nextLine();
                 } catch (Exception e) {
                     System.out.println("Invalid input. Please enter a valid room number.");
                     scanner.nextLine();
                     continue;
                 }
 
-                scanner.nextLine();
+                boolean roomValid = false;
+                for (Room room : rooms) {
+                    if (room.roomNumber == selectedNumber && room.roomType == selectedType && room.isAvailable) {
+                        roomValid = true;
+                        break;
+                    }
+                }
+
+                if (!roomValid) {
+                    System.out.println("Invalid or unavailable room number for selected type. Please choose from the available list.");
+                    continue;
+                }
+
 
                 String name;
                 while (true) {
