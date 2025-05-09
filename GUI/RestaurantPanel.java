@@ -17,7 +17,7 @@ public class RestaurantPanel extends JPanel {
 
     public RestaurantPanel(HotelGUI gui) {
         this.gui = gui;
-        // Main panel styling
+       
         setLayout(new BorderLayout(15, 15));
         setBackground(MAIN_BG);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
