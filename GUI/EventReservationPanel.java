@@ -1,11 +1,9 @@
 package GUI;
 import core.*;
-
 import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 
 public class EventReservationPanel extends JPanel {
     private JComboBox<EventReservation.EventPackageType> packageCombo;
@@ -13,52 +11,119 @@ public class EventReservationPanel extends JPanel {
     private JTextField timeField;
     private HotelGUI gui;
 
+    private final Color MAIN_BG = new Color(9, 32, 63);
+    private final Color PANEL_BG = new Color(32, 58, 67);
+    private final Color BUTTON_BG = new Color(76, 175, 80);
+    private final Color TEXT_COLOR = Color.WHITE;
+    private final Color FIELD_BG = Color.WHITE;
+    private final Color FIELD_FG = Color.BLACK;
+
     public EventReservationPanel(HotelGUI gui) {
         this.gui = gui;
-        setLayout(new GridBagLayout());
+        setLayout(new BorderLayout(15, 15));
+        setBackground(MAIN_BG);
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+
+        JPanel inputPanel = new JPanel(new GridBagLayout());
+        inputPanel.setBackground(PANEL_BG);
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
+
+        JLabel packageLabel = new JLabel("Event Package:");
+        packageLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        packageLabel.setForeground(TEXT_COLOR);
         gbc.gridx = 0;
         gbc.gridy = 0;
-        add(new JLabel("Event Package:"), gbc);
+        inputPanel.add(packageLabel, gbc);
 
         packageCombo = new JComboBox<>(EventReservation.EventPackageType.values());
+        styleComboBox(packageCombo);
         gbc.gridx = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        add(packageCombo, gbc);
+        inputPanel.add(packageCombo, gbc);
 
+
+        JLabel dateLabel = new JLabel("Date (yyyy-MM-dd):");
+        dateLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        dateLabel.setForeground(TEXT_COLOR);
         gbc.gridx = 0;
         gbc.gridy = 1;
-        add(new JLabel("Date (yyyy-MM-dd):"), gbc);
+        inputPanel.add(dateLabel, gbc);
 
-        dateField = new JTextField(10);
+        dateField = new JTextField(15);
+        styleTextField(dateField);
         gbc.gridx = 1;
-        add(dateField, gbc);
+        inputPanel.add(dateField, gbc);
 
+
+        JLabel timeLabel = new JLabel("Time (HH:mm):");
+        timeLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        timeLabel.setForeground(TEXT_COLOR);
         gbc.gridx = 0;
         gbc.gridy = 2;
-        add(new JLabel("Time (HH:mm):"), gbc);
+        inputPanel.add(timeLabel, gbc);
 
         timeField = new JTextField(5);
+        styleTextField(timeField);
         gbc.gridx = 1;
-        add(timeField, gbc);
+        inputPanel.add(timeField, gbc);
 
-        JButton bookButton = new JButton("Book Event");
-        bookButton.addActionListener(e -> bookEvent());
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
+        buttonPanel.setBackground(PANEL_BG);
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
         JButton backButton = new JButton("Back to Main Menu");
+        styleButton(backButton);
         backButton.addActionListener(e -> gui.showPanel("MainMenu"));
 
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.anchor = GridBagConstraints.CENTER;
-        JPanel buttonPanel = new JPanel();
+        JButton bookButton = new JButton("Book Event");
+        styleButton(bookButton);
+        bookButton.addActionListener(e -> bookEvent());
+
         buttonPanel.add(backButton);
         buttonPanel.add(bookButton);
-        add(buttonPanel, gbc);
+
+        add(inputPanel, BorderLayout.CENTER);
+        add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    private void styleComboBox(JComboBox<?> comboBox) {
+        comboBox.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        comboBox.setBackground(FIELD_BG);
+        comboBox.setForeground(FIELD_FG);
+        comboBox.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.WHITE, 1),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
+    }
+
+    private void styleTextField(JTextField textField) {
+        textField.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        textField.setBackground(FIELD_BG);
+        textField.setForeground(FIELD_FG);
+        textField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.WHITE, 1),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
+    }
+
+    private void styleButton(JButton button) {
+        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        button.setBackground(BUTTON_BG);
+        button.setForeground(TEXT_COLOR);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.WHITE, 1),
+                BorderFactory.createEmptyBorder(8, 20, 8, 20)
+        ));
+        button.setContentAreaFilled(false);
+        button.setOpaque(true);
     }
 
     private void bookEvent() {
@@ -69,13 +134,19 @@ public class EventReservationPanel extends JPanel {
             sdf.setLenient(false);
             eventDate = sdf.parse(dateField.getText());
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Invalid date format. Please use yyyy-MM-dd");
+            JOptionPane.showMessageDialog(this,
+                    "Invalid date format. Please use yyyy-MM-dd",
+                    "Invalid Date",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Validate time
+
         if (!timeField.getText().matches("^(?:[01]\\d|2[0-3]):(?:[0-5]\\d)$")) {
-            JOptionPane.showMessageDialog(this, "Invalid time format. Please use HH:mm");
+            JOptionPane.showMessageDialog(this,
+                    "Invalid time format. Please use HH:mm",
+                    "Invalid Time",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -94,7 +165,7 @@ public class EventReservationPanel extends JPanel {
             Room.getLoyalCustomers().add(customer);
         }
 
-        // Get package and calculate price
+
         EventReservation.EventPackageType packageType =
                 (EventReservation.EventPackageType)packageCombo.getSelectedItem();
         double basePrice = packageType.getPrice();
@@ -114,13 +185,15 @@ public class EventReservationPanel extends JPanel {
             EventReceipt.generateEventReceipt(event, finalPrice);
 
             JOptionPane.showMessageDialog(this,
-                    "Event booked successfully!\n" +
-                            "Package: " + packageType + "\n" +
-                            "Date: " + new SimpleDateFormat("yyyy-MM-dd").format(eventDate) + "\n" +
-                            "Time: " + timeField.getText() + "\n" +
-                            "Price: $" + finalPrice + "\n" +
-                            "Event ID: " + event.getEventId()+ "\n" +
-                            "Receipt was successfully generated",
+                    "<html><div style='font-size:14px;'>" +
+                            "Event booked successfully!<br><br>" +
+                            "Package: <b>" + packageType + "</b><br>" +
+                            "Date: " + new SimpleDateFormat("yyyy-MM-dd").format(eventDate) + "<br>" +
+                            "Time: " + timeField.getText() + "<br>" +
+                            "Price: <b>$" + String.format("%.2f", finalPrice) + "</b><br>" +
+                            "Event ID: " + event.getEventId() + "<br><br>" +
+                            "Receipt was successfully generated" +
+                            "</div></html>",
                     "Booking Confirmed",
                     JOptionPane.INFORMATION_MESSAGE);
 
@@ -128,7 +201,7 @@ public class EventReservationPanel extends JPanel {
             timeField.setText("");
         } else {
             JOptionPane.showMessageDialog(this,
-                    "Booking cancelled",
+                    "Booking was cancelled",
                     "Cancelled",
                     JOptionPane.WARNING_MESSAGE);
         }
