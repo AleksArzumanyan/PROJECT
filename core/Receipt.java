@@ -7,9 +7,6 @@ import java.util.Date;
 
 
 public class Receipt {
-    /**
-     * Generates a receipt for the room booking and appends it to a single receipts file.
-     */
     public static void generateReceipt(int roomNumber, RoomType type, double price, String method,Customer customer) {
         String filename = "receipts.txt";
         String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
