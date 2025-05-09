@@ -2,44 +2,23 @@ package core;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-/**
- * The Payment class handles the payment process for room bookings.
- * It allows users to confirm their payment method and finalize the booking.
- */
 public class Payment {
-
-    /**
-     * The room number for which the payment is being made.
-     */
+    
     private int roomNumber;
-
-    /**
-     * The amount to be paid for the room booking.
-     */
+    
     private double amount;
 
-    /**
-     * The payment method chosen by the user.
-     */
+    
     private String paymentMethod;
 
-    /**
-     * Constructs a Payment object with the room number, amount, and payment method.
-     *
-     * @param roomNumber the room number for which payment is being made
-     * @param amount the amount to be paid for the room
-     * @param paymentMethod the method of payment (e.g., Credit Card, Cash, Online)
-     */
+   
     public Payment(int roomNumber, double amount, String paymentMethod) {
         this.roomNumber = roomNumber;
         this.amount = amount;
         this.paymentMethod = paymentMethod;
     }
 
-    /**
-     * Processes the payment for the room booking.
-     * Asks the user to confirm the payment and handles the outcome.
-     */
+    
     public boolean processPayment() {
         Scanner scanner = new Scanner(System.in);
 
@@ -80,11 +59,7 @@ public class Payment {
     }
 
 
-    /**
-     * Cancels the booking by making the room available again.
-     *
-     * @param roomNumber the number of the room to cancel the booking for
-     */
+    
     private void cancelBooking(int roomNumber) {
         for (Room room : Room.getRooms()) {
             if (room.getRoomNumber() == roomNumber) {
