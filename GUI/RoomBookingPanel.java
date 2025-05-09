@@ -46,7 +46,7 @@ public class RoomBookingPanel extends JPanel {
         setBackground(MAIN_BG);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Top Panel
+       
         topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
         topPanel.setBackground(PANEL_BG);
         topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -57,7 +57,6 @@ public class RoomBookingPanel extends JPanel {
         topPanel.add(typeLabel);
         topPanel.add(roomTypeCombo);
 
-        // Bottom Panel
         bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
         bottomPanel.setBackground(PANEL_BG);
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -179,7 +178,7 @@ public class RoomBookingPanel extends JPanel {
                 TEXT_COLOR
         ));
 
-        // Remove back button if visible
+        
         topPanel.remove(unbookBackButton);
         topPanel.revalidate();
         topPanel.repaint();
@@ -196,7 +195,7 @@ public class RoomBookingPanel extends JPanel {
                 TEXT_COLOR
         ));
 
-        // Add back button if not present
+    
         if (unbookBackButton.getParent() == null) {
             topPanel.add(unbookBackButton);
         }
