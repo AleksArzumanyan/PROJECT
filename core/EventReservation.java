@@ -3,16 +3,12 @@ import java.util.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Handles event reservations at the hotel.
- */
+
 public class EventReservation {
     public static final List<EventReservation> reservations = new ArrayList<>();
     private static int counter = 1;
 
-    /**
-     * Types of event packages offered by the hotel.
-     */
+
     public enum EventPackageType {
         BASIC(1000, "Up to 50 guests, basic decor"),
         SILVER(3000, "Up to 100 guests, standard decor + sound system"),
@@ -35,7 +31,7 @@ public class EventReservation {
             return description;
         }
 
-        @Override
+       
         public String toString() {
             return name() + " (" + description + ") - $" + price;
         }
