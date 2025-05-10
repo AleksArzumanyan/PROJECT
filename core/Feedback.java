@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * The Feedback class represents a feedback entry left by a customer.
+ * The Feedback class represents a feedback entry left by a customer
  */
 public class Feedback {
     private static ArrayList<Feedback> allFeedback = new ArrayList<>();
